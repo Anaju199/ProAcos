@@ -36,7 +36,6 @@ const apiLimiter = rateLimit({
 app.use("/api", apiLimiter);
 
 const requestCountsFilePath = path.join(__dirname, process.env.REQUEST_COUNTS_FILE);
-
 let requestCounts = {};
 if (fs.existsSync(requestCountsFilePath)) {
   const data = fs.readFileSync(requestCountsFilePath, "utf-8");
@@ -45,11 +44,6 @@ if (fs.existsSync(requestCountsFilePath)) {
 
 const authorizedIPs = process.env.AUTIP.split(',');
 
-/**
- * Middleware para verificar se o IP está autorizado.
- * @param {string} req.ip 
- * @param {string[]} authorizedIPs 
- */
 function checkIPAuthorization(req, res, next) {
   const ip = req.ip;
   if (!authorizedIPs.includes(ip)) {
@@ -58,29 +52,17 @@ function checkIPAuthorization(req, res, next) {
   next();
 }
 
-// app.use("/api", checkIPAuthorization);
-
-/**
- * @param {string} req.ip - IP do cliente que fez a requisição.
- * @param {object} requestCounts 
- */
 app.use("/api", (req, res, next) => {
   const ip = req.ip;
   if (!requestCounts[ip]) {
     requestCounts[ip] = 0;
   }
-
   requestCounts[ip]++;
   next();
 });
 
-/**
- * Função para salvar a contagem de requisições no arquivo JSON.
- * @param {object} requestCounts
- */
 function saveRequestCounts() {
   const data = JSON.stringify(requestCounts, null, 2);
-
   fs.writeFile(requestCountsFilePath, data, (err) => {
     if (err) {
       console.error("Erro ao salvar contagem de requisições:", err);
@@ -88,11 +70,6 @@ function saveRequestCounts() {
   });
 }
 
-/**
- * Função para formatar a data no formato DD/MM/AAAA - HH:MM:SS.
- * @param {Date} date - Objeto Date que representa a data a ser formatada.
- * @returns {string} String formatada da data no formato especificado.
- */
 function formatDate(date) {
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -104,35 +81,13 @@ function formatDate(date) {
   return `${day}/${month}/${year} - ${hours}:${minutes}:${seconds}`;
 }
 
-/**
- * Função para formatar a data no formato para o nome do arquivo.
- * @param {Date} date - Objeto Date que representa a data a ser formatada.
- * @returns {string} String formatada da data no formato especificado.
- */
-function formatFileNameDate(date) {
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = date.getFullYear();
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  const seconds = String(date.getSeconds()).padStart(2, "0");
-
-  return `${day}-${month}-${year}_${hours}-${minutes}-${seconds}`;
-}
-
-/**
- * @param {string} dateString - String contendo a data a ser validada.
- * @returns {boolean} true se a data for válida, false caso contrário.
- */
-function isValidDate(dateString) {
-  const regex = /^\d{4}-\d{2}-\d{2}$/;
-  return regex.test(dateString);
-}
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html')); // Serve o arquivo index.html
+});
 
 app.get("/api", async (req, res) => {
   try {
     const { start_date, end_date } = req.query;
-
     if (start_date && !isValidDate(start_date)) {
       return res.status(400).send("Data de início inválida. Use o formato AAAA-MM-DD.");
     }
@@ -147,10 +102,8 @@ app.get("/api", async (req, res) => {
     }
 
     const client = await pool.connect();
-
     let query = "SELECT * FROM itens";
     let queryParams = [];
-
     if (start_date && end_date) {
       query += " WHERE datalote BETWEEN $1 AND $2";
       queryParams.push(start_date, end_date);
@@ -158,16 +111,12 @@ app.get("/api", async (req, res) => {
 
     const result = await client.query(query, queryParams);
     client.release();
-
-    const ip = req.ip;
     res.json(result.rows);
 
     const now = new Date();
     const formattedDate = formatDate(now);
-    const formattedFileNameDate = formatFileNameDate(now);
     const filename = `Relatório-${formattedFileNameDate}.json`;
     const backupDir = path.join(__dirname, process.env.BACKUP_DIR);
-
     if (!fs.existsSync(backupDir)) {
       fs.mkdirSync(backupDir);
     }
@@ -175,11 +124,10 @@ app.get("/api", async (req, res) => {
     const filePath = path.join(backupDir, filename);
     const dataWithTimestamp = {
       timestamp: formattedDate,
-      ip: ip,
+      ip: req.ip,
       data: result.rows,
     };
     const backupData = JSON.stringify(dataWithTimestamp, null, 2);
-
     fs.writeFile(filePath, backupData, (err) => {
       if (err) {
         console.error(err);
@@ -187,7 +135,6 @@ app.get("/api", async (req, res) => {
     });
 
     cache.put(cacheKey, result.rows, parseInt(process.env.CACHE_DURATION_MS, 10));
-
     saveRequestCounts();
   } catch (err) {
     console.error(err);
