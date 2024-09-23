@@ -81,9 +81,10 @@ function formatDate(date) {
   return `${day}/${month}/${year} - ${hours}:${minutes}:${seconds}`;
 }
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html')); // Serve o arquivo index.html
-});
+function isValidDate(dateString) {
+  const regex = /^\d{4}-\d{2}-\d{2}$/;
+  return regex.test(dateString);
+}
 
 app.get("/api", async (req, res) => {
   try {
