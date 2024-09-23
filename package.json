@@ -3,10 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "webpack serve",
-    "dev": "nodemon src/index.js",
     "build": "webpack --mode production",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js" 
   },
   "dependencies": {
     "axios": "^1.7.2",
