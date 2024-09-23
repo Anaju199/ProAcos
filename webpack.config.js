@@ -1,40 +1,35 @@
 const path = require('path');
 require("dotenv").config();
-/**
- * Configuração do Webpack para empacotar o código JavaScript.
- * Este arquivo define a entrada (entry) e saída (output) do webpack,
- * além de configurar o servidor de desenvolvimento (devServer) e
- * as regras (rules) para lidar com diferentes tipos de arquivos.
- */
 
 module.exports = {
-    entry: './index.js',
+    mode: process.env.NODE_ENV || 'development', // Adicionei o modo aqui
+    entry: './index.js', // Verifique se o caminho está correto
     output: {
-        filename: 'bundle.js', 
-        path: path.resolve(__dirname, 'dist'), 
+        filename: 'bundle.js',
+        path: path.resolve(__dirname, 'dist'),
     },
     devServer: {
         static: {
-            directory: path.join(__dirname, 'public'), // Diretório estático para servir arquivos HTML, CSS, etc...
+            directory: path.join(__dirname, 'public'),
         },
-        compress: true, // Habilita a compressão
-        port: process.env.PORT_WEB, // Porta para o servidor de desenvolvimento
+        compress: true,
+        port: process.env.PORT_WEB || 3000, // Define um valor padrão para a porta
         proxy: [
             {
-                context: ['/api'], // URLs que serão redirecionadas para o servidor back-end
-                target: `http://${process.env.AUTIP}:${process.env.PORT}`, // URL do servidor back-end
-                secure: false, // Define se a conexão é segura (HTTPS)
-                changeOrigin: true, // Altera o cabeçalho de origem da requisição
+                context: ['/api'],
+                target: `http://${process.env.AUTIP}:${process.env.PORT}`,
+                secure: false,
+                changeOrigin: true,
             },
         ],
     },
     module: {
         rules: [
             {
-                test: /\.html$/, // Regra para arquivos HTML
+                test: /\.html$/,
                 use: [
                     {
-                        loader: 'html-loader', // Loader para processar arquivos HTML
+                        loader: 'html-loader',
                     },
                 ],
             },
