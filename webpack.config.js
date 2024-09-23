@@ -22,6 +22,9 @@ module.exports = {
                 changeOrigin: true,
             },
         ],
+        allowedHosts: [
+            'https://proacos.onrender.com/',
+        ],        
     },
     module: {
         rules: [
