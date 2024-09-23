@@ -18,6 +18,9 @@ const pool = new Pool({
 
 const app = express();
 
+// Middleware para servir arquivos estáticos
+app.use(express.static(path.join(__dirname, '../public')));
+
 app.use(express.json());
 app.use(cors());
 app.use(helmet());
@@ -52,6 +55,7 @@ function checkIPAuthorization(req, res, next) {
   next();
 }
 
+// Contagem de requisições por IP
 app.use("/api", (req, res, next) => {
   const ip = req.ip;
   if (!requestCounts[ip]) {
@@ -61,6 +65,7 @@ app.use("/api", (req, res, next) => {
   next();
 });
 
+// Salvar contagem de requisições em um arquivo
 function saveRequestCounts() {
   const data = JSON.stringify(requestCounts, null, 2);
   fs.writeFile(requestCountsFilePath, data, (err) => {
@@ -69,6 +74,11 @@ function saveRequestCounts() {
     } 
   });
 }
+
+// Rota para a página inicial
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'));
+});
 
 function formatDate(date) {
   const day = String(date.getDate()).padStart(2, "0");
@@ -116,6 +126,7 @@ app.get("/api", async (req, res) => {
 
     const now = new Date();
     const formattedDate = formatDate(now);
+    const formattedFileNameDate = formatFileNameDate(now);
     const filename = `Relatório-${formattedFileNameDate}.json`;
     const backupDir = path.join(__dirname, process.env.BACKUP_DIR);
     if (!fs.existsSync(backupDir)) {
@@ -147,4 +158,6 @@ app.get("/request-counts", (req, res) => {
   res.json(requestCounts);
 });
 
-app.listen(process.env.PORT);
+app.listen(process.env.PORT, () => {
+  console.log(`Servidor rodando na porta ${process.env.PORT}`);
+});
