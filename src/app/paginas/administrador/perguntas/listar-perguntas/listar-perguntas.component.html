@@ -1,0 +1,60 @@
+<div class="container row mx-auto">
+  <div class="container row mx-auto">
+    <div class="col-md-9 align-self-center">
+      <p class="titulo">
+        Perguntas
+      </p>
+    </div>
+    <div class="col-md-3 align-self-center">
+      <i class="fa-regular fa-plus"></i><a href="/cadastrarEditarPergunta" class="add"> Adicionar Pergunta</a>
+    </div>
+  </div>
+  <div class="col-md-12 align-self-center">
+    <div class="d-flex" role="search">
+      <input
+        type="search"
+        class="form-control me-2"
+        placeholder="Digite a pergunta que procura"
+        autofocus
+        [(ngModel)]="filtroPergunta"
+        (keyup)="pesquisarPergunta()"
+      >
+    </div>
+  </div>
+  <br>
+  <br>
+  <div *ngIf="listaPerguntas.length > 0, else semPergunta">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Pergunta</th>
+          <th>Excluir</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let pergunta of listaPerguntas; let i = index">
+          <tr [class.odd]="i % 2 === 0" [class.even]="i % 2 !== 0">
+            <td><a class="listaAdm" href="/cadastrarEditarPergunta/{{ pergunta.id }}">{{ pergunta.pergunta }}</a></td>
+            <td><button class="botaoExcluir" (click)="excluir(pergunta.id)"><i class="fa-regular fa-trash-can"></i></button></td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+  <div class="d-flex flex-column align-items-center">
+    <div class="d-flex flex-wrap gap-3" *ngIf="totalPaginas > 1">
+      <button (click)="paginaAnterior()" [ngClass]="habilitarBotao('anterior')" [disabled]="habilitarBotao('anterior') === 'botao_pag_desabilitado'">Anterior</button>
+      <button (click)="proximaPagina()" [ngClass]="habilitarBotao('proxima')" [disabled]="habilitarBotao('proxima') === 'botao_pag_desabilitado'">Próxima</button>
+    </div>
+    <br/>
+    <div class="d-flex flex-wrap gap-3">
+      <button (click)="adicionar()" class="botao_forms">Adicionar pergunta</button>
+    </div>
+  </div>
+</div>
+
+<ng-template #semPergunta>
+  <div class="ff-inter centralizar">
+    <p>Não há nenhuma pergunta cadastrada</p>
+  </div>
+</ng-template>

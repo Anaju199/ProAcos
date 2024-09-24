@@ -1,0 +1,25 @@
+<section class="container fomulario ff-inter">
+  <header class="header">
+    <h2>{{ cliente.nome }}</h2>
+  </header>
+
+  <div *ngIf="listaRespostas.length > 0, else semRespostas">
+    <div *ngFor="let pergunta of listaRespostas">
+      <h4>{{ pergunta.pergunta_texto }}</h4>
+      <p>R: {{ pergunta.resposta }}</p>
+      <hr>
+    </div>
+  </div>
+
+  <div class="d-flex flex-column align-items-center">
+    <div class="d-flex flex-wrap gap-3">
+    <button (click)="voltar()" class="botao_forms">Voltar</button>
+    </div>
+  </div>
+
+  <ng-template #semRespostas>
+    <div class="ff-inter centralizar">
+      <p>Esse usuário ainda não respondeu o questionário</p>
+    </div>
+  </ng-template>
+</section>

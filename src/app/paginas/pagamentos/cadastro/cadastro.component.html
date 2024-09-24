@@ -1,0 +1,139 @@
+<section class="container_cadastros fomulario ff-inter">
+  <header class="header">
+    <h2>{{ titulo }}</h2>
+  </header>
+  <form [formGroup]="formulario">
+
+    <div *ngIf="!alterarSenha">
+
+      <label for="nome">Nome</label>
+      <input
+        type="textarea"
+        class="input"
+        id="nome"
+        formControlName="nome"
+        placeholder="Digite o nome"
+      >
+      <div class="mensagem__erro"
+      *ngIf="formulario.get('nome')?.errors && formulario.get('nome')?.touched">
+        Nome é Obrigatório!
+      </div>
+
+      <label for="cpf">CPF</label>
+      <input
+        type="textarea"
+        class="input"
+        id="cpf"
+        maxlength="11"
+        formControlName="cpf"
+        placeholder="Digite o CPF"
+      >
+      <div class="mensagem__erro"
+      *ngIf="formulario.get('cpf')?.errors && formulario.get('cpf')?.touched">
+        CPF é Obrigatório!
+      </div>
+
+      <label for="email">E-mail</label>
+      <input
+        type="email"
+        class="input"
+        id="email"
+        formControlName="email"
+        placeholder="Digite o email"
+      >
+      <!-- <div class="mensagem__erro"
+      *ngIf="formulario.get('email')?.errors && formulario.get('email')?.touched">
+        E-mail é Obrigatório!
+      </div> -->
+
+      <label for="celular">Celular</label>
+      <input
+        type="text"
+        class="input"
+        id="celular"
+        maxlength="11"
+        formControlName="celular"
+        placeholder="Digite o número"
+        mask="(00) 00000-0000"
+      />
+      <!-- <div class="mensagem__erro"
+      *ngIf="formulario.get('celular')?.errors && formulario.get('celular')?.touched">
+        Celular é Obrigatório!
+      </div> -->
+
+    </div>
+
+    <div *ngIf="!(user$ | async) || alterarSenha">
+
+      <label for="senha">Senha</label>
+      <input
+        type="password"
+        class="input"
+        id="senha"
+        formControlName="senha"
+        placeholder="Digite a senha"
+      >
+      <div class="mensagem__erro"
+      *ngIf="formulario.get('senha')?.errors && formulario.get('senha')?.touched">
+        Senha é Obrigatória!
+      </div>
+
+
+      <label for="senha_2">Confirme a senha</label>
+      <input
+        type="password"
+        class="input"
+        id="senha_2"
+        formControlName="senha_2"
+        placeholder="Digite a senha novamente"
+      >
+      <div class="mensagem__erro"
+      *ngIf="formulario.get('senha_2')?.errors && formulario.get('senha_2')?.touched">
+      Senhas não coincidem
+      </div>
+
+    </div>
+
+    <div *ngIf="!alterarSenha">
+
+      <div *ngIf="isAdmin">
+        <div class="row mx-auto" >
+          <div class="col-md-6">
+            <input id="cliente" type="checkbox" formControlName="cliente" [checked]="false" selected />
+            <label class="campo__check" for="cliente">Cliente</label>
+          </div>
+
+          <div class="col-md-6">
+            <input id="administrador" type="checkbox" formControlName="administrador" [checked]="false" selected />
+            <label class="campo__check" for="administrador">Administrador</label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  <br/>
+    <div class="d-flex flex-column align-items-center">
+      <div class="d-flex flex-wrap gap-3">
+        <button
+        [disabled]="!formulario.valid"
+        (click)="id ? editar() : cadastrar()"
+        [ngClass]="habilitarBotao()"
+        id="btnSalvar"
+        >Salvar
+      </button>
+      <button (click)="cancelar()" class="botao_forms">Voltar para página Inicial</button>
+    </div>
+
+    <div *ngIf="!alterarSenha">
+      <p>Já tem cadastro?
+        <a class="link" routerLink="/login"><u>Faça login!</u></a>
+      </p>
+      <p>Deseja
+        <a class="link" [routerLink]="['/alterarSenha', id]" [queryParams]="{ alterarSenha: true }"><u>alterar a senha?</u></a>
+      </p>
+    </div>
+  </div>
+</form>
+
+</section>

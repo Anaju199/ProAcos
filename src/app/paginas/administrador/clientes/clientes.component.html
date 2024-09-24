@@ -1,0 +1,83 @@
+<div class="container row mx-auto">
+  <div class="container row mx-auto">
+    <div class="col-md-9 align-self-center">
+      <p class="titulo">
+        Clientes
+      </p>
+    </div>
+    <div class="col-md-3 align-self-center">
+      <i class="fa-regular fa-plus"></i><a href="/cliente" class="add"> Adicionar Cliente</a>
+    </div>
+  </div>
+  <div class="col-md-8 align-self-center">
+    <label style="margin-left: 5px;" for="adm">Pesquisar</label>
+    <div class="d-flex" role="search">
+      <input
+        type="search"
+        class="form-control me-2"
+        placeholder="Digite o nome de quem procura"
+        autofocus
+        [(ngModel)]="filtroNome"
+        (keyup)="pesquisarCliente($event)"
+      >
+    </div>
+  </div>
+  <div class="col-md-2 align-self-center">
+    <label style="margin-left: 5px;" for="cliente">Cliente</label>
+    <select class="form-select" id="cliente" aria-label="Cliente" (change)="pesquisarCliente($event)">
+      <option value="" disabled selected>Selecione</option>
+      <option value="True">Sim</option>
+      <option value="False">Não</option>
+      <option value="">Todos</option>
+    </select>
+  </div>
+  <div class="col-md-2 align-self-center">
+    <label style="margin-left: 5px;" for="adm">Administrador</label>
+    <select class="form-select" id="adm" aria-label="Adm" (change)="pesquisarCliente($event)">
+      <option value="" disabled selected>Selecione</option>
+      <option value="True">Sim</option>
+      <option value="False">Não</option>
+      <option value="">Todos</option>
+    </select>
+  </div>
+  <br>
+  <br>
+  <br>
+  <div *ngIf="listaClientes.length > 0, else semCliente">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>CPF</th>
+          <th>E-mail</th>
+          <th>Cliente</th>
+          <th>Editar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let cliente of listaClientes; let i = index">
+          <tr [class.odd]="i % 2 === 0" [class.even]="i % 2 !== 0">
+            <td><a class="listaAdm" [href]="cliente.administrador ? '/editarCliente/' + cliente.id : '/cliente/' + cliente.id">{{ cliente.nome }}</a></td>
+            <td><a class="listaAdm" [href]="cliente.administrador ? '/editarCliente/' + cliente.id : '/cliente/' + cliente.id">{{ cliente.cpf }}</a></td>
+            <td><a class="listaAdm" [href]="cliente.administrador ? '/editarCliente/' + cliente.id : '/cliente/' + cliente.id">{{ cliente.email }}</a></td>
+            <td><a class="listaAdm" [href]="cliente.administrador ? '/editarCliente/' + cliente.id : '/cliente/' + cliente.id">{{ cliente.cliente ? 'Sim' : 'Não' }}</a></td>
+            <td><a class="botaoExcluir" href="/editarCliente/{{ cliente.id }}"><i class="fa-solid fa-pencil"></i></a></td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+  <div class="d-flex flex-column align-items-center">
+    <div class="d-flex flex-wrap gap-3" *ngIf="totalPaginas > 1">
+      <button (click)="paginaAnterior()" [ngClass]="habilitarBotao('anterior')" [disabled]="habilitarBotao('anterior') === 'botao_pag_desabilitado'">Anterior</button>
+      <button (click)="proximaPagina()" [ngClass]="habilitarBotao('proxima')" [disabled]="habilitarBotao('proxima') === 'botao_pag_desabilitado'">Próxima</button>
+    </div>
+    <br/>
+  </div>
+</div>
+
+<ng-template #semCliente>
+  <div class="ff-inter centralizar">
+    <p>Não há nenhuma cliente cadastrado</p>
+  </div>
+</ng-template>

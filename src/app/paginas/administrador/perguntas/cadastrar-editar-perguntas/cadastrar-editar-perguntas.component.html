@@ -1,0 +1,33 @@
+<section class="container_cadastros fomulario ff-inter">
+  <header class="header">
+    <h2>{{ titulo }}</h2>
+  </header>
+  <form [formGroup]="formulario">
+
+    <label for="pergunta">Pergunta</label>
+    <textarea
+      class="input"
+      id="pergunta"
+      formControlName="pergunta"
+      placeholder="Digite a pergunta"
+      autoResizeTextarea
+    ></textarea>
+    <div class="mensagem__erro"
+     *ngIf="formulario.get('pergunta')?.errors && formulario.get('pergunta')?.touched">
+      Pergunta é Obrigatória!
+    </div>
+
+    <div class="d-flex flex-column align-items-center">
+      <div class="d-flex flex-wrap gap-3">
+      <button
+      [disabled]="!formulario.valid"
+       (click)="id ? editarPergunta() : criarPergunta()"
+        [ngClass]="habilitarBotao()"
+        id="btnSalvar"
+        >Salvar
+      </button>
+      <button (click)="cancelar()" class="botao_forms">Cancelar</button>
+      </div>
+    </div>
+  </form>
+</section>

@@ -1,0 +1,50 @@
+<div class="d-flex flex-column align-items-center" [ngClass]="{'sombra': listaVendas.length > 0}">
+  <section class="fomulario ff-inter">
+    <form [formGroup]="formulario" (ngSubmit)="pesquisar()">
+      <label for="start_date">DE:</label>
+      <input
+        type="date"
+        class="input"
+        id="start_date"
+        formControlName="start_date"
+        required
+      />
+      <br />
+      <label for="end_date">ATÉ:</label>
+      <input
+        type="date"
+        class="input"
+        id="end_date"
+        formControlName="end_date"
+        required
+      />
+      <br />
+      <div class="d-flex flex-column align-items-center">
+        <button type="submit" class="btn btn-primary">Consultar</button>
+      </div>
+    </form>
+  </section>
+</div>
+
+<div style="padding-top: 0.5rem;" *ngIf="listaVendas.length > 0">
+  <table class="table table-light table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Item</th>
+        <th>Quant.</th>
+        <th>Entrada</th>
+        <th>Saída</th>
+      </tr>
+    </thead>
+    <ng-container *ngFor="let vendas of listaVendas; let i = index">
+      <tr [class.odd]="i % 2 !== 0" [class.even]="i % 2 === 0">
+        <td class='lista'>{{vendas.id}}</td>
+        <td class='lista'>{{vendas.item}}</td>
+        <td class='lista'>{{vendas.quant}}</td>
+        <td class='lista'>{{vendas.datavenda | date:'dd/MM/yyyy'}}</td>
+        <td class='lista'>{{vendas.datalote | date:'dd/MM/yyyy'}}</td>
+      </tr>
+    </ng-container>
+  </table>
+</div>

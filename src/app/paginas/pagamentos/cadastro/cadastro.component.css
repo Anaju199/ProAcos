@@ -1,0 +1,7 @@
+.campo__check {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--azul);
+  margin-left: 5px;
+}

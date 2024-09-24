@@ -1,0 +1,49 @@
+<nav class="navbar navbar-white bg-white navbar-expand-lg" >
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item ff-inter">
+          <a class="nav-link active" aria-current="page" href="#">Página Inicial</a>
+        </li>
+        <li class="nav-item ff-inter">
+          <a class="nav-link" href="/sobreMim">Sobre Mim</a>
+        </li>
+        <ng-container *ngIf="isAdmin">
+          <li class="nav-item ff-inter">
+            <a class="nav-link" href="/clientes">Clientes</a>
+          </li>
+        </ng-container>
+        <ng-container *ngIf="isAdmin">
+          <li class="nav-item ff-inter">
+            <a class="nav-link" href="/listarPerguntas">Perguntas</a>
+          </li>
+        </ng-container>
+        <ng-container *ngIf="isUser">
+          <li class="nav-item ff-inter">
+            <a class="nav-link" href="/questionario">Questionário</a>
+          </li>
+        </ng-container>
+      </ul>
+    </div>
+    <ng-container *ngIf="user$ | async as Usuario, else login">
+      <!-- <a class="nav-item ff-inter dropdown-toggle" data-bs-toggle="dropdown">Olá {{nome}}</a> -->
+      <li class="nav-item dropdown">
+        <a class="nav-item ff-inter dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Olá {{nome}}
+        </a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item text-start" href="/editarCliente/{{ id }}">Meu perfil</a></li>
+          <li><a class="dropdown-item text-start" [routerLink]="['/alterarSenha', id]" [queryParams]="{ alterarSenha: true }">Alterar Senha</a></li>
+        </ul>
+      </li>
+      <button class="btn btn-outline-dark" style="color: rgb(0, 0, 0);" (click)="logout()">Sair</button>
+    </ng-container>
+  </div>
+</nav>
+
+<ng-template #login class="d-flex">
+  <button class="btn btn-outline-dark" style="color: rgb(0, 0, 0);" routerLink="/login">Login</button>
+</ng-template>
