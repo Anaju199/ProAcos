@@ -29,6 +29,8 @@ export class MenuComponent implements OnInit {
     const role = this.userService.retornarUserRole();
     this.isAdmin = role === 'admin';
     this.isUser = role === 'user';
+    const idioma = localStorage.getItem('idiomaSelecionado') || 'pt';
+    this.translate.use(idioma);
   }
 
   user$ = this.userService.retornarUser();
@@ -47,6 +49,7 @@ export class MenuComponent implements OnInit {
     if (target && target.value) {
       const idioma = target.value;
       this.translate.use(idioma);
+      localStorage.setItem('idiomaSelecionado', idioma);
     }
   }
   
