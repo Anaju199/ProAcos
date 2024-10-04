@@ -1,7 +1,7 @@
 <div class="d-flex flex-column align-items-center" [ngClass]="{'sombra': listaVendas.length > 0}">
   <section class="fomulario ff-inter">
     <form [formGroup]="formulario" (ngSubmit)="pesquisar()">
-      <label for="start_date">DE:</label>
+      <label for="start_date">{{ 'De' | translate }}:</label>
       <input
         type="date"
         class="input"
@@ -10,7 +10,7 @@
         required
       />
       <br />
-      <label for="end_date">ATÉ:</label>
+      <label for="end_date">{{ 'Ate' | translate }}:</label>
       <input
         type="date"
         class="input"
@@ -20,10 +20,17 @@
       />
       <br />
       <div class="d-flex flex-column align-items-center">
-        <button type="submit" class="btn btn-primary">Consultar</button>
+        <button type="submit" class="btn btn-primary">{{ 'BtnPesquisar' | translate }}</button>
       </div>
     </form>
   </section>
+</div>
+
+<!-- Spinner de carregamento -->
+<div *ngIf="carregando" class="text-center">
+  <div class="spinner-border text-primary" role="status">
+    <span class="sr-only">Carregando...</span>
+  </div>
 </div>
 
 <div style="padding-top: 0.5rem;" *ngIf="listaVendas.length > 0">
@@ -33,8 +40,8 @@
         <th>ID</th>
         <th>Item</th>
         <th>Quant.</th>
-        <th>Entrada</th>
-        <th>Saída</th>
+        <th>{{ 'Entrada' | translate }}</th>
+        <th>{{ 'Saida' | translate }}</th>
       </tr>
     </thead>
     <ng-container *ngFor="let vendas of listaVendas; let i = index">
@@ -49,13 +56,6 @@
   </table>
 </div>
 
-<!-- Spinner de carregamento -->
-<div *ngIf="carregando" class="text-center">
-  <div class="spinner-border text-primary" role="status">
-    <span class="sr-only">Carregando...</span>
-  </div>
-</div>
-
 <div *ngIf="pesquisaRealizada && listaVendas.length === 0" class="ff-inter centralizar">
-  <p>Não há dados no período informado.</p>
+  <p>{{ 'SemDados' | translate }}</p>
 </div>

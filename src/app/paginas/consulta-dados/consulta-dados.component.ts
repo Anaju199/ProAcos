@@ -55,6 +55,7 @@ export class ConsultaDadosComponent implements OnInit {
             this.carregando = false;
           },
           error => {
+            this.carregando = false;
             alert('Ocorreu um erro ao buscar os dados, entre em contato com o administrador');
           }
         );
