@@ -35,9 +35,14 @@ export class ConsultaDadosComponent implements OnInit {
         const { start_date, end_date } = this.formulario.value;
 
         this.service.listar(start_date, end_date)
-        .subscribe(listaVendas => {
-          this.listaVendas = listaVendas
-        })
+        .subscribe(
+          listaVendas => {
+            this.listaVendas = listaVendas;
+          },
+          error => {
+            alert('Ocorreu um erro ao buscar os dados, entre em contato com o administrador');
+          }
+        );
         // this.realizarPesquisa(start_date, end_date);
       } else {
         this.formulario.markAllAsTouched();
