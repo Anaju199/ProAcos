@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { ItensService } from './itens.service';
 import { Itens } from './Itens';
 
@@ -13,6 +13,8 @@ export class ConsultaDadosComponent implements OnInit {
 
     formulario!: FormGroup;
     listaVendas: Itens [] = [];
+    pesquisaRealizada: boolean = false;
+    carregando: boolean = false;
 
     constructor(
       private formBuilder: FormBuilder,
@@ -22,7 +24,7 @@ export class ConsultaDadosComponent implements OnInit {
       this.formulario = this.formBuilder.group({
         start_date: ['', Validators.required],
         end_date: ['', Validators.required]
-      });
+      }, { validator: this.dataRangeValidator });
 
       // this.service.listar('2024-09-01', '2024-09-30')
       //   .subscribe(listaVendas => {
@@ -30,23 +32,40 @@ export class ConsultaDadosComponent implements OnInit {
       //   })
     }
 
+    dataRangeValidator(control: AbstractControl): { [key: string]: boolean } | null {
+      const startDate = control.get('start_date')?.value;
+      const endDate = control.get('end_date')?.value;
+  
+      if (startDate && endDate && startDate >= endDate) {
+        return { dateRangeInvalid: true }; 
+      }
+      return null; 
+    }
+
     pesquisar(): void {
       if (this.formulario.valid) {
         const { start_date, end_date } = this.formulario.value;
+        this.carregando = true;
 
         this.service.listar(start_date, end_date)
         .subscribe(
           listaVendas => {
             this.listaVendas = listaVendas;
+            this.pesquisaRealizada = true; 
+            this.carregando = false;
           },
           error => {
+            this.carregando = false;
             alert('Ocorreu um erro ao buscar os dados, entre em contato com o administrador');
           }
         );
-        // this.realizarPesquisa(start_date, end_date);
       } else {
         this.formulario.markAllAsTouched();
-        alert('Por favor, preencha as datas corretamente.');
+        if (this.formulario.hasError('dateRangeInvalid')) {
+          alert('A data final deve ser maior que a data inicial.');
+        } else {
+          alert('Por favor, preencha as datas corretamente.');
+        }
       }
     }
 

@@ -35,3 +35,21 @@ a{
   text-align: center;
   text-decoration: none;
 }
+
+
+/* language */
+
+.custom-select {
+  position: relative;
+  display: inline-block;
+}
+
+.icons {
+  display: flex;
+  align-items: center;
+}
+
+.icons img {
+  margin-right: 5px;
+  cursor: pointer;
+}
