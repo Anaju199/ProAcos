@@ -20,10 +20,10 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.formulario = this.formBuilder.group({
-      login: ['',Validators.compose([
+      login: ['12345678901',Validators.compose([
         Validators.required
       ])],
-      senha: ['',Validators.compose([
+      senha: ['123456',Validators.compose([
         Validators.required
       ])]
     })
