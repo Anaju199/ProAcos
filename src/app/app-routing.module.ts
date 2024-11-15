@@ -46,7 +46,8 @@ const routes: Routes = [
   },
   {
     path: 'paginaInicial',
-    component: PaginaInicialComponent
+    component: PaginaInicialComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'sobreMim',
